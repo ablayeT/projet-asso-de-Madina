@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
-const envPath = path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`);
-dotenv.config({ path: envPath });
+const envFile = `.env.${process.env.NODE_ENV}` || ".env";
+dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 import connectMongo from "./middlewares/connectMongo";
 import express, { Request, Response } from "express";
 import userRoutes from "./routes/userRoutes";
@@ -11,7 +11,7 @@ import meetingRoutes from "./routes/meetingRoutes";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-console.log("Database URI:", process.env.DB_URI); // Pour vérifier que l'URI est correctement chargée
+// console.log("Database URI:", process.env.DB_URI); // Pour vérifier que l'URI est correctement chargée
 
 // Middleware pour parser les requêtes JSON
 app.use(express.json());
@@ -33,9 +33,11 @@ app.use("/api/admin", adminRoutes);
 // Routes pour les réunions
 app.use("/api", meetingRoutes);
 
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Démarrage du serveur uniquement si le script est exécuté directement
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 export default app;

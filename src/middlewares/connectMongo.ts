@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 
-const mongoURI: string = process.env.MONGO_URI as string; // Assurez-vous que la chaîne est sécurisée
+const DB_URI: string = process.env.MONGO_URI as string; // Assurez-vous que la chaîne est sécurisée
 
 const connectMongo = async (
   req: Request,
@@ -11,7 +11,7 @@ const connectMongo = async (
 ) => {
   if (mongoose.connection.readyState !== 1) {
     try {
-      await mongoose.connect(mongoURI);
+      await mongoose.connect(DB_URI);
       console.log("MongoDB connected successfully");
       next();
     } catch (err) {
