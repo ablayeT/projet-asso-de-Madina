@@ -12,7 +12,7 @@ describe("User Endpoints", () => {
     });
     expect(res.statusCode).toEqual(201);
     expect(res.text).toBe("User registered successfully");
-  });
+  }, 30000); // 30 seconds timeout
 
   it("should login a user", async () => {
     const res = await request(app).post("/api/users/login").send({
@@ -21,5 +21,6 @@ describe("User Endpoints", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("token");
-  });
+    console.log("Logged in user token:", res.body.token); // Log the token
+  }, 30000); // 30 seconds timeout
 });

@@ -40,7 +40,12 @@ export const loginUser = async (req: ExtendedRequest, res: Response) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).send("Invalid credentials");
 
-    const token = jwt.sign({ id: user._id }, "your_jwt_secret", {
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined");
+    }
+
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, {
       expiresIn: "1d",
     });
     res.status(200).send({ token });
